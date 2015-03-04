@@ -1,0 +1,317 @@
+I'm trying to load dll library of commands in order to connect to software api
+but when i load it i got errors although previous versions of the api and software did work
+
+my code is
+
+    addpath('C:\Program Files\OptiTrack\Motive\lib'); % change if necessary
+    addpath('C:\Program Files\OptiTrack\Motive\inc'); % change if necessary
+
+    [notfound,warnings]=loadlibrary('NPTrackingTools','NPTrackingTools.h')
+
+I'm using win7 64bit with matlab 2014a 64 bit
+i tried different mex compilers: Microsoft Windows SDK 7.1 (C) and Microsoft Visual C++ 2013 Professional (C)/ but got the same errors.
+
+more background information:
+I'm trying to close loop of control system that get position of Quad-copters from Optitrack cameras and Motive software.
+i already succeed connecting throw NatNet interface API in Simulink but failed on using in Real-Time Windows Target and matlab support told me it's problematic to implement in Real-time mode Simulink because this API use .NET DLL so now I'm trying to make the other API to work because it's  normal DLL and not .NET.
+
+the errors i got is
+
+  Error loading library intermediate output follows.
+  The actual error is at the end of this output.
+  *********
+  
+  Type 'cTrackableSettingsPtr' was not found. Defaulting to type voidPtr.
+  
+  Found on line 348 of input from line 253 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  
+  Type 'cTrackableSettingsPtr' was not found. Defaulting to type voidPtr.
+  
+  Found on line 349 of input from line 254 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  
+  Type 'intCameraLibrary::CameraManagerPtr' was not found. Defaulting to type voidPtr.
+  
+  Found on line 353 of input from line 258 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  
+  Type 'intclasscCameraGroupFilterSettings{public:' was not found. Defaulting to type error.
+  
+  Found on line 387 of input from line 292 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  
+  Type 'cCameraGroupFilterSettingsPtr' was not found. Defaulting to type voidPtr.
+  
+  Found on line 389 of input from line 294 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  
+  Type 'cCameraGroupFilterSettingsPtr' was not found. Defaulting to type voidPtr.
+  
+  Found on line 390 of input from line 295 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  
+  Type 'unsignedlonglongclasscCameraGroupPointCloudSettings{public:Setting:{eResolvePointCloud=1LL,eShowCameras=1LL<<1,eVisibleMarkerSize=1LL<<3,ePCResidual=1LL<<4,ePCMinSize=1LL<<5,ePCMaxSize=1LL<<6,ePCMinAngle=1LL<<7,ePCMinRays=1LL<<8,eShutterDelay=1LL<<9,ePrecisionPacketCap=1LL<<10,ePCMinRayLength=1LL<<11,ePCMaxRayLength=1LL<<12,ePCReconstructMinX=1LL<<13,ePCReconstructMaxX=1LL<<14,ePCReconstructMinY=1LL<<15,ePCReconstructMaxY=1LL<<16,ePCReconstructMinZ=1LL<<17,ePCReconstructMaxZ=1LL<<18,ePCObjectFilterLevel=1LL<<19,ePCObjectFilterMinSize=1LL<<20,ePCObjectFilterMaxSize=1LL<<21,ePCObjectFilterCircularity=1LL<<22,ePCObjectFilterGrayscaleFloor=1LL<<23,ePCObjectFilterAspectTolerance=1LL<<24,ePCObjectFilterObjectMargin=1LL<<25,eShowReconstructionBounds=1LL<<26,eBoundReconstruction=1LL<<27,eShowCaptureVolume=1LL<<28,eShow3DMarkers=1LL<<29,eShowCameraFOV=1LL<<30,eCameraOverlap=1LL<<31,eVolumeResolution=1LL<<32,eWireframe=1LL<<33,eFOVIntensity=1LL<<34,eRankRays=1LL<<35,eMinimumRankRayCount=1LL<<36,ePCPixelGutter=1LL<<37,ePCMaximum2DPoints=1LL<<38,ePCCalculationTime=1LL<<39,ePCThreadCount=1LL<<40,ePCCalculateDiameter=1LL<<41,ePCBoost=1LL<<42,ePCSmallMarkerOptimization=1LL<<43,eBlockWidth=1LL<<44,eBlockHeight=1LL<<45,ePointCloudEngine=1LL<<46,eSynchronizerEngine=1LL<<47,eMarkerDiameterType=1LL<<48,eMarkerDiameterForceSize=1LL<<49,eSynchronizerControl=1LL<<50,eSettingsCount};' was not found. Defaulting to type error.
+  
+  Found on line 473 of input from line 378 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  
+  Type 'cCameraGroupPointCloudSettingsPtr' was not found. Defaulting to type voidPtr.
+  
+  Found on line 475 of input from line 380 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  
+  Type 'cCameraGroupPointCloudSettingsPtr' was not found. Defaulting to type voidPtr.
+  
+  Found on line 476 of input from line 381 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  
+  Type 'intclasscCameraGroupMarkerSizeSettings{public:' was not found. Defaulting to type error.
+  
+  Found on line 495 of input from line 400 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  
+  Type 'cCameraGroupMarkerSizeSettingsPtr' was not found. Defaulting to type voidPtr.
+  
+  Found on line 497 of input from line 402 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  
+  Type 'cCameraGroupMarkerSizeSettingsPtr' was not found. Defaulting to type voidPtr.
+  
+  Found on line 498 of input from line 403 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  
+  Type 'intCameraLibrary::CameraPtr' was not found. Defaulting to type voidPtr.
+  
+  Found on line 622 of input from line 527 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  
+  Failed to parse type 'CameraLibrary :: cCameraModule * module' original input ' CameraLibrary :: cCameraModule * module '
+  Found on line 624 of input from line 529 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  Error parsing argument for function TT_AttachCameraModule function may be invalid.
+  
+  Failed to parse type 'CameraLibrary :: cCameraModule * module' original input ' CameraLibrary :: cCameraModule * module '
+  Found on line 625 of input from line 530 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  Error parsing argument for function TT_DetachCameraModule function may be invalid.
+  
+  Type 'cTrackableSolutionTestPtr' was not found. Defaulting to type voidPtr.
+  
+  Found on line 645 of input from line 550 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  
+  Type 'cTrackableSolutionTestPtr' was not found. Defaulting to type voidPtr.
+  
+  Found on line 646 of input from line 551 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  
+  Type 'intclasscTTAPIListener{public:' was not found. Defaulting to type error.
+  
+  Found on line 670 of input from line 575 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  
+  Type 'cTTAPIListenerPtr' was not found. Defaulting to type voidPtr.
+  
+  Found on line 672 of input from line 577 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  
+  Type 'cTTAPIListenerPtr' was not found. Defaulting to type voidPtr.
+  
+  Found on line 673 of input from line 578 of file C:\\Program Files\\OptiTrack\\Motive\\inc\\NPTrackingTools.h
+  *********
+  Error using loadlibrary (line 422)
+  Building NPTrackingTools_thunk_pcwin64 failed. Compiler output is:
+  cl -I"C:\Program Files\MATLAB\R2014a\extern\include" /Zp8 /W3 /nologo
+  -I"C:\Users\sorhirsh\Documents\MATLAB" -I"C:\Program Files\OptiTrack\Motive\inc"
+  "NPTrackingTools_thunk_pcwin64.c" -LD -Fe"NPTrackingTools_thunk_pcwin64.dll"
+  NPTrackingTools_thunk_pcwin64.c
+  c:\program files\optitrack\motive\inc\trackablesettings.h(12) : error C2061: syntax error
+  : identifier 'Core'
+  c:\program files\optitrack\motive\inc\trackablesettings.h(12) : error C2059: syntax error
+  : ';'
+  c:\program files\optitrack\motive\inc\trackablesettings.h(13) : error C2449: found '{' at
+  file scope (missing function header?)
+  c:\program files\optitrack\motive\inc\trackablesettings.h(17) : error C2059: syntax error
+  : '}'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(29) : error C2061: syntax error :
+  identifier 'CameraLibrary'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(29) : error C2059: syntax error :
+  ';'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(30) : error C2449: found '{' at
+  file scope (missing function header?)
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(34) : error C2059: syntax error :
+  '}'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(106) : error C2061: syntax error
+  : identifier 'Core'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(106) : error C2059: syntax error
+  : ';'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(107) : error C2449: found '{' at
+  file scope (missing function header?)
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(160) : error C2059: syntax error
+  : '}'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(207) : error C2143: syntax error
+  : missing ')' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(207) : error C2143: syntax error
+  : missing '{' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(207) : error C2059: syntax error
+  : '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(207) : error C2059: syntax error
+  : ')'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(243) : error C2143: syntax error
+  : missing ')' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(243) : error C2143: syntax error
+  : missing '{' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(243) : error C2059: syntax error
+  : '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(244) : error C2059: syntax error
+  : ')'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(253) : error C2143: syntax error
+  : missing ')' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(253) : error C2081:
+  'cTrackableSettings' : name in formal parameter list illegal
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(253) : error C2143: syntax error
+  : missing '{' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(253) : error C2059: syntax error
+  : '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(253) : error C2059: syntax error
+  : ')'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(254) : error C2143: syntax error
+  : missing ')' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(254) : error C2081:
+  'cTrackableSettings' : name in formal parameter list illegal
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(254) : error C2143: syntax error
+  : missing '{' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(254) : error C2059: syntax error
+  : '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(254) : error C2059: syntax error
+  : ')'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(258) : error C2143: syntax error
+  : missing '{' before ':'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(258) : error C2059: syntax error
+  : ':'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(275) : error C2054: expected '('
+  to follow 'class'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(276) : error C2085:
+  'cCameraGroupFilterSettings' : not in formal parameter list
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(276) : error C2143: syntax error
+  : missing ';' before '{'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(294) : error C2143: syntax error
+  : missing ')' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(294) : error C2081:
+  'cCameraGroupFilterSettings' : name in formal parameter list illegal
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(294) : error C2143: syntax error
+  : missing '{' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(294) : error C2059: syntax error
+  : '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(294) : error C2059: syntax error
+  : ')'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(295) : error C2143: syntax error
+  : missing ')' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(295) : error C2081:
+  'cCameraGroupFilterSettings' : name in formal parameter list illegal
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(295) : error C2143: syntax error
+  : missing '{' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(295) : error C2059: syntax error
+  : '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(295) : error C2059: syntax error
+  : ')'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(298) : error C2054: expected '('
+  to follow 'class'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(299) : error C2085:
+  'cCameraGroupPointCloudSettings' : not in formal parameter list
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(299) : error C2143: syntax error
+  : missing ';' before '{'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(380) : error C2143: syntax error
+  : missing ')' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(380) : error C2081:
+  'cCameraGroupPointCloudSettings' : name in formal parameter list illegal
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(380) : error C2143: syntax error
+  : missing '{' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(380) : error C2059: syntax error
+  : '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(380) : error C2059: syntax error
+  : ')'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(381) : error C2143: syntax error
+  : missing ')' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(381) : error C2081:
+  'cCameraGroupPointCloudSettings' : name in formal parameter list illegal
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(381) : error C2143: syntax error
+  : missing '{' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(381) : error C2059: syntax error
+  : '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(381) : error C2059: syntax error
+  : ')'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(385) : error C2054: expected '('
+  to follow 'class'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(386) : error C2085:
+  'cCameraGroupMarkerSizeSettings' : not in formal parameter list
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(386) : error C2143: syntax error
+  : missing ';' before '{'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(402) : error C2143: syntax error
+  : missing ')' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(402) : error C2081:
+  'cCameraGroupMarkerSizeSettings' : name in formal parameter list illegal
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(402) : error C2143: syntax error
+  : missing '{' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(402) : error C2059: syntax error
+  : '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(402) : error C2059: syntax error
+  : ')'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(403) : error C2143: syntax error
+  : missing ')' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(403) : error C2081:
+  'cCameraGroupMarkerSizeSettings' : name in formal parameter list illegal
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(403) : error C2143: syntax error
+  : missing '{' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(403) : error C2059: syntax error
+  : '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(403) : error C2059: syntax error
+  : ')'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(425) : error C2143: syntax error
+  : missing ')' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(425) : error C2143: syntax error
+  : missing '{' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(425) : error C2059: syntax error
+  : '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(425) : error C2059: syntax error
+  : ')'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(432) : error C2143: syntax error
+  : missing ')' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(432) : error C2143: syntax error
+  : missing '{' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(432) : error C2059: syntax error
+  : '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(432) : error C2059: syntax error
+  : ')'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(496) : error C2143: syntax error
+  : missing ')' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(496) : error C2143: syntax error
+  : missing '{' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(496) : error C2059: syntax error
+  : '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(496) : error C2059: syntax error
+  : ')'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(502) : error C2143: syntax error
+  : missing ')' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(502) : error C2143: syntax error
+  : missing '{' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(502) : error C2059: syntax error
+  : '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(502) : error C2059: syntax error
+  : ')'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(503) : error C2143: syntax error
+  : missing ')' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(503) : error C2143: syntax error
+  : missing '{' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(503) : error C2059: syntax error
+  : '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(503) : error C2059: syntax error
+  : ')'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(508) : error C2143: syntax error
+  : missing ')' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(508) : error C2143: syntax error
+  : missing '{' before '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(508) : error C2059: syntax error
+  : '&'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(509) : error C2059: syntax error
+  : ')'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(527) : error C2143: syntax error
+  : missing '{' before ':'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(527) : error C2059: syntax error
+  : ':'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(529) : error C2143: syntax error
+  : missing ')' before ':'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(529) : error C2081:
+  'CameraLibrary' : name in formal parameter list illegal
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(529) : error C2143: syntax error
+  : missing '{' before ':'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(529) : error C2059: syntax error
+  : ':'
+  C:\Program Files\OptiTrack\Motive\inc\NPTrackingTools.h(529) : fatal error C1003: error
+  count exceeds 100; stopping compilation
+
+Thank you
+Or Hirshfeld
+אור הירשפלד
