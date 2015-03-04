@@ -1,0 +1,3 @@
+LIBRARY Optitrack_Simulink_TrackableLocation_sfun.mexw64
+EXPORTS
+mexFunction
