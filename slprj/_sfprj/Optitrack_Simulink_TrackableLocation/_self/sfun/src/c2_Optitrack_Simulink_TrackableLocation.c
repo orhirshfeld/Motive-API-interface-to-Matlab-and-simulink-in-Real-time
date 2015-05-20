@@ -18,9 +18,10 @@
 
 /* Variable Definitions */
 static real_T _sfTime_;
-static const char * c2_debug_family_names[19] = { "X", "Y", "Z", "yaw", "pitch",
-  "roll", "qx", "qy", "qz", "qw", "nargin", "nargout", "Trackable_index", "x",
-  "y", "z", "yaw1", "pitch1", "roll1" };
+static const char * c2_debug_family_names[22] = { "X", "Y", "Z", "yaw", "pitch",
+  "roll", "qx", "qy", "qz", "qw", "TimeStamp1", "nargin", "nargout",
+  "Trackable_index", "x", "y", "z", "yaw1", "pitch1", "roll1", "TimeStamp",
+  "DeltaTime" };
 
 /* Function Declarations */
 static void initialize_c2_Optitrack_Simulink_TrackableLocation
@@ -42,27 +43,29 @@ static void finalize_c2_Optitrack_Simulink_TrackableLocation
   (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance);
 static void sf_gateway_c2_Optitrack_Simulink_TrackableLocation
   (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance);
+static void c2_chartstep_c2_Optitrack_Simulink_TrackableLocation
+  (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance);
 static void initSimStructsc2_Optitrack_Simulink_TrackableLocation
   (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance);
 static void init_script_number_translation(uint32_T c2_machineNumber, uint32_T
   c2_chartNumber, uint32_T c2_instanceNumber);
 static const mxArray *c2_sf_marshallOut(void *chartInstanceVoid, void *c2_inData);
-static real_T c2_emlrt_marshallIn
-  (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance, const
-   mxArray *c2_roll1, const char_T *c2_identifier);
-static real_T c2_b_emlrt_marshallIn
-  (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance, const
-   mxArray *c2_u, const emlrtMsgIdentifier *c2_parentId);
 static void c2_sf_marshallIn(void *chartInstanceVoid, const mxArray
   *c2_mxArrayInData, const char_T *c2_varName, void *c2_outData);
 static const mxArray *c2_b_sf_marshallOut(void *chartInstanceVoid, void
   *c2_inData);
 static void c2_b_sf_marshallIn(void *chartInstanceVoid, const mxArray
   *c2_mxArrayInData, const char_T *c2_varName, void *c2_outData);
-static real32_T c2_c_emlrt_marshallIn
+static real32_T c2_emlrt_marshallIn
   (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance, const
    mxArray *c2_X, const char_T *c2_identifier);
-static real32_T c2_d_emlrt_marshallIn
+static real32_T c2_b_emlrt_marshallIn
+  (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance, const
+   mxArray *c2_u, const emlrtMsgIdentifier *c2_parentId);
+static real_T c2_c_emlrt_marshallIn
+  (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance, const
+   mxArray *c2_calllib, const char_T *c2_identifier);
+static real_T c2_d_emlrt_marshallIn
   (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance, const
    mxArray *c2_u, const emlrtMsgIdentifier *c2_parentId);
 static const mxArray *c2_c_sf_marshallOut(void *chartInstanceVoid, void
@@ -79,6 +82,15 @@ static uint8_T c2_f_emlrt_marshallIn
 static uint8_T c2_g_emlrt_marshallIn
   (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance, const
    mxArray *c2_u, const emlrtMsgIdentifier *c2_parentId);
+static real_T c2_get_old_TimeStamp
+  (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance,
+   uint32_T c2_b);
+static void c2_set_old_TimeStamp
+  (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance,
+   uint32_T c2_b, real_T c2_c);
+static real_T *c2_access_old_TimeStamp
+  (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance,
+   uint32_T c2_b);
 static void init_dsm_address_info
   (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance);
 
@@ -138,61 +150,81 @@ static const mxArray *get_sim_state_c2_Optitrack_Simulink_TrackableLocation
   real_T c2_f_hoistedGlobal;
   real_T c2_f_u;
   const mxArray *c2_g_y = NULL;
-  uint8_T c2_g_hoistedGlobal;
-  uint8_T c2_g_u;
+  real_T c2_g_hoistedGlobal;
+  real_T c2_g_u;
   const mxArray *c2_h_y = NULL;
+  real_T c2_h_hoistedGlobal;
+  real_T c2_h_u;
+  const mxArray *c2_i_y = NULL;
+  uint8_T c2_i_hoistedGlobal;
+  uint8_T c2_i_u;
+  const mxArray *c2_j_y = NULL;
+  real_T *c2_DeltaTime;
+  real_T *c2_TimeStamp;
   real_T *c2_pitch1;
   real_T *c2_roll1;
   real_T *c2_x;
-  real_T *c2_i_y;
+  real_T *c2_k_y;
   real_T *c2_yaw1;
   real_T *c2_z;
+  c2_DeltaTime = (real_T *)ssGetOutputPortSignal(chartInstance->S, 8);
+  c2_TimeStamp = (real_T *)ssGetOutputPortSignal(chartInstance->S, 7);
   c2_roll1 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 6);
   c2_pitch1 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 5);
   c2_yaw1 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 4);
   c2_z = (real_T *)ssGetOutputPortSignal(chartInstance->S, 3);
-  c2_i_y = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
+  c2_k_y = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
   c2_x = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
   c2_st = NULL;
   c2_st = NULL;
   c2_y = NULL;
-  sf_mex_assign(&c2_y, sf_mex_createcellmatrix(7, 1), false);
-  c2_hoistedGlobal = *c2_pitch1;
+  sf_mex_assign(&c2_y, sf_mex_createcellmatrix(9, 1), false);
+  c2_hoistedGlobal = *c2_DeltaTime;
   c2_u = c2_hoistedGlobal;
   c2_b_y = NULL;
   sf_mex_assign(&c2_b_y, sf_mex_create("y", &c2_u, 0, 0U, 0U, 0U, 0), false);
   sf_mex_setcell(c2_y, 0, c2_b_y);
-  c2_b_hoistedGlobal = *c2_roll1;
+  c2_b_hoistedGlobal = *c2_TimeStamp;
   c2_b_u = c2_b_hoistedGlobal;
   c2_c_y = NULL;
   sf_mex_assign(&c2_c_y, sf_mex_create("y", &c2_b_u, 0, 0U, 0U, 0U, 0), false);
   sf_mex_setcell(c2_y, 1, c2_c_y);
-  c2_c_hoistedGlobal = *c2_x;
+  c2_c_hoistedGlobal = *c2_pitch1;
   c2_c_u = c2_c_hoistedGlobal;
   c2_d_y = NULL;
   sf_mex_assign(&c2_d_y, sf_mex_create("y", &c2_c_u, 0, 0U, 0U, 0U, 0), false);
   sf_mex_setcell(c2_y, 2, c2_d_y);
-  c2_d_hoistedGlobal = *c2_i_y;
+  c2_d_hoistedGlobal = *c2_roll1;
   c2_d_u = c2_d_hoistedGlobal;
   c2_e_y = NULL;
   sf_mex_assign(&c2_e_y, sf_mex_create("y", &c2_d_u, 0, 0U, 0U, 0U, 0), false);
   sf_mex_setcell(c2_y, 3, c2_e_y);
-  c2_e_hoistedGlobal = *c2_yaw1;
+  c2_e_hoistedGlobal = *c2_x;
   c2_e_u = c2_e_hoistedGlobal;
   c2_f_y = NULL;
   sf_mex_assign(&c2_f_y, sf_mex_create("y", &c2_e_u, 0, 0U, 0U, 0U, 0), false);
   sf_mex_setcell(c2_y, 4, c2_f_y);
-  c2_f_hoistedGlobal = *c2_z;
+  c2_f_hoistedGlobal = *c2_k_y;
   c2_f_u = c2_f_hoistedGlobal;
   c2_g_y = NULL;
   sf_mex_assign(&c2_g_y, sf_mex_create("y", &c2_f_u, 0, 0U, 0U, 0U, 0), false);
   sf_mex_setcell(c2_y, 5, c2_g_y);
-  c2_g_hoistedGlobal =
-    chartInstance->c2_is_active_c2_Optitrack_Simulink_TrackableLocation;
+  c2_g_hoistedGlobal = *c2_yaw1;
   c2_g_u = c2_g_hoistedGlobal;
   c2_h_y = NULL;
-  sf_mex_assign(&c2_h_y, sf_mex_create("y", &c2_g_u, 3, 0U, 0U, 0U, 0), false);
+  sf_mex_assign(&c2_h_y, sf_mex_create("y", &c2_g_u, 0, 0U, 0U, 0U, 0), false);
   sf_mex_setcell(c2_y, 6, c2_h_y);
+  c2_h_hoistedGlobal = *c2_z;
+  c2_h_u = c2_h_hoistedGlobal;
+  c2_i_y = NULL;
+  sf_mex_assign(&c2_i_y, sf_mex_create("y", &c2_h_u, 0, 0U, 0U, 0U, 0), false);
+  sf_mex_setcell(c2_y, 7, c2_i_y);
+  c2_i_hoistedGlobal =
+    chartInstance->c2_is_active_c2_Optitrack_Simulink_TrackableLocation;
+  c2_i_u = c2_i_hoistedGlobal;
+  c2_j_y = NULL;
+  sf_mex_assign(&c2_j_y, sf_mex_create("y", &c2_i_u, 3, 0U, 0U, 0U, 0), false);
+  sf_mex_setcell(c2_y, 8, c2_j_y);
   sf_mex_assign(&c2_st, c2_y, false);
   return c2_st;
 }
@@ -202,12 +234,16 @@ static void set_sim_state_c2_Optitrack_Simulink_TrackableLocation
    mxArray *c2_st)
 {
   const mxArray *c2_u;
+  real_T *c2_DeltaTime;
+  real_T *c2_TimeStamp;
   real_T *c2_pitch1;
   real_T *c2_roll1;
   real_T *c2_x;
   real_T *c2_y;
   real_T *c2_yaw1;
   real_T *c2_z;
+  c2_DeltaTime = (real_T *)ssGetOutputPortSignal(chartInstance->S, 8);
+  c2_TimeStamp = (real_T *)ssGetOutputPortSignal(chartInstance->S, 7);
   c2_roll1 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 6);
   c2_pitch1 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 5);
   c2_yaw1 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 4);
@@ -216,20 +252,24 @@ static void set_sim_state_c2_Optitrack_Simulink_TrackableLocation
   c2_x = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
   chartInstance->c2_doneDoubleBufferReInit = true;
   c2_u = sf_mex_dup(c2_st);
-  *c2_pitch1 = c2_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c2_u,
-    0)), "pitch1");
-  *c2_roll1 = c2_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c2_u,
-    1)), "roll1");
-  *c2_x = c2_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c2_u, 2)),
+  *c2_DeltaTime = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell
+    (c2_u, 0)), "DeltaTime");
+  *c2_TimeStamp = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell
+    (c2_u, 1)), "TimeStamp");
+  *c2_pitch1 = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell
+    (c2_u, 2)), "pitch1");
+  *c2_roll1 = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell
+    (c2_u, 3)), "roll1");
+  *c2_x = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c2_u, 4)),
     "x");
-  *c2_y = c2_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c2_u, 3)),
+  *c2_y = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c2_u, 5)),
     "y");
-  *c2_yaw1 = c2_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c2_u,
-    4)), "yaw1");
-  *c2_z = c2_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c2_u, 5)),
+  *c2_yaw1 = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c2_u,
+    6)), "yaw1");
+  *c2_z = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c2_u, 7)),
     "z");
   chartInstance->c2_is_active_c2_Optitrack_Simulink_TrackableLocation =
-    c2_f_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c2_u, 6)),
+    c2_f_emlrt_marshallIn(chartInstance, sf_mex_dup(sf_mex_getcell(c2_u, 8)),
     "is_active_c2_Optitrack_Simulink_TrackableLocation");
   sf_mex_destroy(&c2_u);
   c2_update_debugger_state_c2_Optitrack_Simulink_TrackableLocation(chartInstance);
@@ -245,9 +285,50 @@ static void finalize_c2_Optitrack_Simulink_TrackableLocation
 static void sf_gateway_c2_Optitrack_Simulink_TrackableLocation
   (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance)
 {
+  real_T *c2_Trackable_index;
+  real_T *c2_x;
+  real_T *c2_y;
+  real_T *c2_z;
+  real_T *c2_yaw1;
+  real_T *c2_pitch1;
+  real_T *c2_roll1;
+  real_T *c2_TimeStamp;
+  real_T *c2_DeltaTime;
+  c2_DeltaTime = (real_T *)ssGetOutputPortSignal(chartInstance->S, 8);
+  c2_TimeStamp = (real_T *)ssGetOutputPortSignal(chartInstance->S, 7);
+  c2_roll1 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 6);
+  c2_pitch1 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 5);
+  c2_yaw1 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 4);
+  c2_z = (real_T *)ssGetOutputPortSignal(chartInstance->S, 3);
+  c2_y = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
+  c2_x = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
+  c2_Trackable_index = (real_T *)ssGetInputPortSignal(chartInstance->S, 0);
+  _SFD_SYMBOL_SCOPE_PUSH(0U, 0U);
+  _sfTime_ = sf_get_time(chartInstance->S);
+  _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 0U, chartInstance->c2_sfEvent);
+  _SFD_DATA_RANGE_CHECK(*c2_Trackable_index, 0U);
+  chartInstance->c2_sfEvent = CALL_EVENT;
+  c2_chartstep_c2_Optitrack_Simulink_TrackableLocation(chartInstance);
+  _SFD_SYMBOL_SCOPE_POP();
+  _SFD_CHECK_FOR_STATE_INCONSISTENCY
+    (_Optitrack_Simulink_TrackableLocationMachineNumber_,
+     chartInstance->chartNumber, chartInstance->instanceNumber);
+  _SFD_DATA_RANGE_CHECK(*c2_x, 1U);
+  _SFD_DATA_RANGE_CHECK(*c2_y, 2U);
+  _SFD_DATA_RANGE_CHECK(*c2_z, 3U);
+  _SFD_DATA_RANGE_CHECK(*c2_yaw1, 4U);
+  _SFD_DATA_RANGE_CHECK(*c2_pitch1, 5U);
+  _SFD_DATA_RANGE_CHECK(*c2_roll1, 6U);
+  _SFD_DATA_RANGE_CHECK(*c2_TimeStamp, 7U);
+  _SFD_DATA_RANGE_CHECK(*c2_DeltaTime, 8U);
+}
+
+static void c2_chartstep_c2_Optitrack_Simulink_TrackableLocation
+  (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance)
+{
   real_T c2_hoistedGlobal;
   real_T c2_Trackable_index;
-  uint32_T c2_debug_family_var_map[19];
+  uint32_T c2_debug_family_var_map[22];
   real32_T c2_X;
   real32_T c2_Y;
   real32_T c2_Z;
@@ -258,14 +339,17 @@ static void sf_gateway_c2_Optitrack_Simulink_TrackableLocation
   real32_T c2_qy;
   real32_T c2_qz;
   real32_T c2_qw;
+  real_T c2_TimeStamp1;
   real_T c2_nargin = 1.0;
-  real_T c2_nargout = 6.0;
+  real_T c2_nargout = 8.0;
   real_T c2_x;
   real_T c2_y;
   real_T c2_z;
   real_T c2_yaw1;
   real_T c2_pitch1;
   real_T c2_roll1;
+  real_T c2_TimeStamp;
+  real_T c2_DeltaTime;
   int32_T c2_i0;
   static char_T c2_cv0[15] = { 'N', 'P', 'T', 'r', 'a', 'c', 'k', 'i', 'n', 'g',
     'T', 'o', 'o', 'l', 's' };
@@ -319,29 +403,37 @@ static void sf_gateway_c2_Optitrack_Simulink_TrackableLocation
   const mxArray *c2_b_Z = NULL;
   const mxArray *c2_b_Y = NULL;
   const mxArray *c2_b_X = NULL;
+  int32_T c2_i4;
+  char_T c2_p_u[15];
+  const mxArray *c2_q_y = NULL;
+  int32_T c2_i5;
+  static char_T c2_cv3[17] = { 'T', 'T', '_', 'F', 'r', 'a', 'm', 'e', 'T', 'i',
+    'm', 'e', 'S', 't', 'a', 'm', 'p' };
+
+  char_T c2_q_u[17];
+  const mxArray *c2_r_y = NULL;
   real_T *c2_b_Trackable_index;
   real_T *c2_b_x;
-  real_T *c2_q_y;
+  real_T *c2_s_y;
   real_T *c2_b_z;
   real_T *c2_b_yaw1;
   real_T *c2_b_pitch1;
   real_T *c2_b_roll1;
+  real_T *c2_b_TimeStamp;
+  real_T *c2_b_DeltaTime;
+  c2_b_DeltaTime = (real_T *)ssGetOutputPortSignal(chartInstance->S, 8);
+  c2_b_TimeStamp = (real_T *)ssGetOutputPortSignal(chartInstance->S, 7);
   c2_b_roll1 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 6);
   c2_b_pitch1 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 5);
   c2_b_yaw1 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 4);
   c2_b_z = (real_T *)ssGetOutputPortSignal(chartInstance->S, 3);
-  c2_q_y = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
+  c2_s_y = (real_T *)ssGetOutputPortSignal(chartInstance->S, 2);
   c2_b_x = (real_T *)ssGetOutputPortSignal(chartInstance->S, 1);
   c2_b_Trackable_index = (real_T *)ssGetInputPortSignal(chartInstance->S, 0);
-  _SFD_SYMBOL_SCOPE_PUSH(0U, 0U);
-  _sfTime_ = sf_get_time(chartInstance->S);
-  _SFD_CC_CALL(CHART_ENTER_SFUNCTION_TAG, 0U, chartInstance->c2_sfEvent);
-  _SFD_DATA_RANGE_CHECK(*c2_b_Trackable_index, 0U);
-  chartInstance->c2_sfEvent = CALL_EVENT;
   _SFD_CC_CALL(CHART_ENTER_DURING_FUNCTION_TAG, 0U, chartInstance->c2_sfEvent);
   c2_hoistedGlobal = *c2_b_Trackable_index;
   c2_Trackable_index = c2_hoistedGlobal;
-  _SFD_SYMBOL_SCOPE_PUSH_EML(0U, 19U, 19U, c2_debug_family_names,
+  _SFD_SYMBOL_SCOPE_PUSH_EML(0U, 22U, 22U, c2_debug_family_names,
     c2_debug_family_var_map);
   _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_X, 0U, c2_b_sf_marshallOut,
     c2_b_sf_marshallIn);
@@ -363,26 +455,33 @@ static void sf_gateway_c2_Optitrack_Simulink_TrackableLocation
     c2_b_sf_marshallIn);
   _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_qw, 9U, c2_b_sf_marshallOut,
     c2_b_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_nargin, 10U, c2_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_TimeStamp1, 10U, c2_sf_marshallOut,
     c2_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_nargout, 11U, c2_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_nargin, 11U, c2_sf_marshallOut,
     c2_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML(&c2_Trackable_index, 12U, c2_sf_marshallOut);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_x, 13U, c2_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_nargout, 12U, c2_sf_marshallOut,
     c2_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_y, 14U, c2_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML(&c2_Trackable_index, 13U, c2_sf_marshallOut);
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_x, 14U, c2_sf_marshallOut,
     c2_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_z, 15U, c2_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_y, 15U, c2_sf_marshallOut,
     c2_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_yaw1, 16U, c2_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_z, 16U, c2_sf_marshallOut,
     c2_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_pitch1, 17U, c2_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_yaw1, 17U, c2_sf_marshallOut,
     c2_sf_marshallIn);
-  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_roll1, 18U, c2_sf_marshallOut,
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_pitch1, 18U, c2_sf_marshallOut,
+    c2_sf_marshallIn);
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_roll1, 19U, c2_sf_marshallOut,
+    c2_sf_marshallIn);
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_TimeStamp, 20U, c2_sf_marshallOut,
+    c2_sf_marshallIn);
+  _SFD_SYMBOL_SCOPE_ADD_EML_IMPORTABLE(&c2_DeltaTime, 21U, c2_sf_marshallOut,
     c2_sf_marshallIn);
   CV_EML_FCN(0, 0);
   _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 2);
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 5);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 4);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 7);
   for (c2_i0 = 0; c2_i0 < 15; c2_i0++) {
     c2_u[c2_i0] = c2_cv0[c2_i0];
   }
@@ -399,27 +498,29 @@ static void sf_gateway_c2_Optitrack_Simulink_TrackableLocation
                 false);
   sf_mex_call_debug(sfGlobalDebugInstanceStruct, "calllib", 0U, 2U, 14, c2_b_y,
                     14, c2_c_y);
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 9);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 11);
   c2_X = 0.0F;
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 9);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 11);
   c2_Y = 0.0F;
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 9);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 11);
   c2_Z = 0.0F;
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 10);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 12);
   c2_yaw = 0.0F;
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 10);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 12);
   c2_pitch = 0.0F;
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 10);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 12);
   c2_roll = 0.0F;
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 11);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 13);
   c2_qx = 0.0F;
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 11);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 13);
   c2_qy = 0.0F;
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 11);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 13);
   c2_qz = 0.0F;
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 11);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 13);
   c2_qw = 0.0F;
   _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 14);
+  c2_TimeStamp1 = 0.0;
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 17);
   for (c2_i2 = 0; c2_i2 < 15; c2_i2++) {
     c2_c_u[c2_i2] = c2_cv0[c2_i2];
   }
@@ -473,30 +574,54 @@ static void sf_gateway_c2_Optitrack_Simulink_TrackableLocation
                     14, c2_o_y, 14, c2_p_y, &c2_b_X, &c2_b_Y, &c2_b_Z, &c2_b_qx,
                     &c2_b_qy, &c2_b_qz, &c2_b_qw, &c2_b_yaw, &c2_b_pitch,
                     &c2_b_roll);
-  c2_X = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_X), "X");
-  c2_Y = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_Y), "Y");
-  c2_Z = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_Z), "Z");
-  c2_qx = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_qx), "qx");
-  c2_qy = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_qy), "qy");
-  c2_qz = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_qz), "qz");
-  c2_qw = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_qw), "qw");
-  c2_yaw = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_yaw), "yaw");
-  c2_pitch = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_pitch),
-    "pitch");
-  c2_roll = c2_c_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_roll), "roll");
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 17);
+  c2_X = c2_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_X), "X");
+  c2_Y = c2_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_Y), "Y");
+  c2_Z = c2_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_Z), "Z");
+  c2_qx = c2_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_qx), "qx");
+  c2_qy = c2_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_qy), "qy");
+  c2_qz = c2_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_qz), "qz");
+  c2_qw = c2_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_qw), "qw");
+  c2_yaw = c2_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_yaw), "yaw");
+  c2_pitch = c2_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_pitch), "pitch");
+  c2_roll = c2_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_b_roll), "roll");
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 18);
+  for (c2_i4 = 0; c2_i4 < 15; c2_i4++) {
+    c2_p_u[c2_i4] = c2_cv0[c2_i4];
+  }
+
+  c2_q_y = NULL;
+  sf_mex_assign(&c2_q_y, sf_mex_create("y", c2_p_u, 10, 0U, 1U, 0U, 2, 1, 15),
+                false);
+  for (c2_i5 = 0; c2_i5 < 17; c2_i5++) {
+    c2_q_u[c2_i5] = c2_cv3[c2_i5];
+  }
+
+  c2_r_y = NULL;
+  sf_mex_assign(&c2_r_y, sf_mex_create("y", c2_q_u, 10, 0U, 1U, 0U, 2, 1, 17),
+                false);
+  c2_TimeStamp1 = c2_c_emlrt_marshallIn(chartInstance, sf_mex_call_debug
+    (sfGlobalDebugInstanceStruct, "calllib", 1U, 2U, 14, c2_q_y, 14, c2_r_y),
+    "calllib");
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 21);
   c2_x = c2_X;
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 17);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 21);
   c2_y = c2_Y;
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 17);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 21);
   c2_z = c2_Z;
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 18);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 22);
   c2_yaw1 = c2_yaw;
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 18);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 22);
   c2_pitch1 = c2_pitch;
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 18);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 22);
   c2_roll1 = c2_roll;
-  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, -18);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 23);
+  c2_TimeStamp = c2_TimeStamp1;
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 26);
+  c2_DeltaTime = c2_TimeStamp - c2_get_old_TimeStamp(chartInstance, 0);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, 27);
+  c2_set_old_TimeStamp(chartInstance, 0, c2_TimeStamp);
+  ssUpdateDataStoreLog(chartInstance->S, 0);
+  _SFD_EML_CALL(0U, chartInstance->c2_sfEvent, -27);
   _SFD_SYMBOL_SCOPE_POP();
   sf_mex_destroy(&c2_b_X);
   sf_mex_destroy(&c2_b_Y);
@@ -509,22 +634,14 @@ static void sf_gateway_c2_Optitrack_Simulink_TrackableLocation
   sf_mex_destroy(&c2_b_pitch);
   sf_mex_destroy(&c2_b_roll);
   *c2_b_x = c2_x;
-  *c2_q_y = c2_y;
+  *c2_s_y = c2_y;
   *c2_b_z = c2_z;
   *c2_b_yaw1 = c2_yaw1;
   *c2_b_pitch1 = c2_pitch1;
   *c2_b_roll1 = c2_roll1;
+  *c2_b_TimeStamp = c2_TimeStamp;
+  *c2_b_DeltaTime = c2_DeltaTime;
   _SFD_CC_CALL(EXIT_OUT_OF_FUNCTION_TAG, 0U, chartInstance->c2_sfEvent);
-  _SFD_SYMBOL_SCOPE_POP();
-  _SFD_CHECK_FOR_STATE_INCONSISTENCY
-    (_Optitrack_Simulink_TrackableLocationMachineNumber_,
-     chartInstance->chartNumber, chartInstance->instanceNumber);
-  _SFD_DATA_RANGE_CHECK(*c2_b_x, 1U);
-  _SFD_DATA_RANGE_CHECK(*c2_q_y, 2U);
-  _SFD_DATA_RANGE_CHECK(*c2_b_z, 3U);
-  _SFD_DATA_RANGE_CHECK(*c2_b_yaw1, 4U);
-  _SFD_DATA_RANGE_CHECK(*c2_b_pitch1, 5U);
-  _SFD_DATA_RANGE_CHECK(*c2_b_roll1, 6U);
 }
 
 static void initSimStructsc2_Optitrack_Simulink_TrackableLocation
@@ -557,48 +674,22 @@ static const mxArray *c2_sf_marshallOut(void *chartInstanceVoid, void *c2_inData
   return c2_mxArrayOutData;
 }
 
-static real_T c2_emlrt_marshallIn
-  (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance, const
-   mxArray *c2_roll1, const char_T *c2_identifier)
-{
-  real_T c2_y;
-  emlrtMsgIdentifier c2_thisId;
-  c2_thisId.fIdentifier = c2_identifier;
-  c2_thisId.fParent = NULL;
-  c2_y = c2_b_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_roll1), &c2_thisId);
-  sf_mex_destroy(&c2_roll1);
-  return c2_y;
-}
-
-static real_T c2_b_emlrt_marshallIn
-  (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance, const
-   mxArray *c2_u, const emlrtMsgIdentifier *c2_parentId)
-{
-  real_T c2_y;
-  real_T c2_d0;
-  (void)chartInstance;
-  sf_mex_import(c2_parentId, sf_mex_dup(c2_u), &c2_d0, 1, 0, 0U, 0, 0U, 0);
-  c2_y = c2_d0;
-  sf_mex_destroy(&c2_u);
-  return c2_y;
-}
-
 static void c2_sf_marshallIn(void *chartInstanceVoid, const mxArray
   *c2_mxArrayInData, const char_T *c2_varName, void *c2_outData)
 {
-  const mxArray *c2_roll1;
+  const mxArray *c2_calllib;
   const char_T *c2_identifier;
   emlrtMsgIdentifier c2_thisId;
   real_T c2_y;
   SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance;
   chartInstance = (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *)
     chartInstanceVoid;
-  c2_roll1 = sf_mex_dup(c2_mxArrayInData);
+  c2_calllib = sf_mex_dup(c2_mxArrayInData);
   c2_identifier = c2_varName;
   c2_thisId.fIdentifier = c2_identifier;
   c2_thisId.fParent = NULL;
-  c2_y = c2_b_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_roll1), &c2_thisId);
-  sf_mex_destroy(&c2_roll1);
+  c2_y = c2_d_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_calllib), &c2_thisId);
+  sf_mex_destroy(&c2_calllib);
   *(real_T *)c2_outData = c2_y;
   sf_mex_destroy(&c2_mxArrayInData);
 }
@@ -634,7 +725,7 @@ static void c2_b_sf_marshallIn(void *chartInstanceVoid, const mxArray
   c2_identifier = c2_varName;
   c2_thisId.fIdentifier = c2_identifier;
   c2_thisId.fParent = NULL;
-  c2_y = c2_d_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_X), &c2_thisId);
+  c2_y = c2_b_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_X), &c2_thisId);
   sf_mex_destroy(&c2_X);
   *(real32_T *)c2_outData = c2_y;
   sf_mex_destroy(&c2_mxArrayInData);
@@ -651,7 +742,7 @@ const mxArray
   return c2_nameCaptureInfo;
 }
 
-static real32_T c2_c_emlrt_marshallIn
+static real32_T c2_emlrt_marshallIn
   (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance, const
    mxArray *c2_X, const char_T *c2_identifier)
 {
@@ -659,12 +750,12 @@ static real32_T c2_c_emlrt_marshallIn
   emlrtMsgIdentifier c2_thisId;
   c2_thisId.fIdentifier = c2_identifier;
   c2_thisId.fParent = NULL;
-  c2_y = c2_d_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_X), &c2_thisId);
+  c2_y = c2_b_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_X), &c2_thisId);
   sf_mex_destroy(&c2_X);
   return c2_y;
 }
 
-static real32_T c2_d_emlrt_marshallIn
+static real32_T c2_b_emlrt_marshallIn
   (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance, const
    mxArray *c2_u, const emlrtMsgIdentifier *c2_parentId)
 {
@@ -673,6 +764,32 @@ static real32_T c2_d_emlrt_marshallIn
   (void)chartInstance;
   sf_mex_import(c2_parentId, sf_mex_dup(c2_u), &c2_f0, 1, 1, 0U, 0, 0U, 0);
   c2_y = c2_f0;
+  sf_mex_destroy(&c2_u);
+  return c2_y;
+}
+
+static real_T c2_c_emlrt_marshallIn
+  (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance, const
+   mxArray *c2_calllib, const char_T *c2_identifier)
+{
+  real_T c2_y;
+  emlrtMsgIdentifier c2_thisId;
+  c2_thisId.fIdentifier = c2_identifier;
+  c2_thisId.fParent = NULL;
+  c2_y = c2_d_emlrt_marshallIn(chartInstance, sf_mex_dup(c2_calllib), &c2_thisId);
+  sf_mex_destroy(&c2_calllib);
+  return c2_y;
+}
+
+static real_T c2_d_emlrt_marshallIn
+  (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance, const
+   mxArray *c2_u, const emlrtMsgIdentifier *c2_parentId)
+{
+  real_T c2_y;
+  real_T c2_d0;
+  (void)chartInstance;
+  sf_mex_import(c2_parentId, sf_mex_dup(c2_u), &c2_d0, 1, 0, 0U, 0, 0U, 0);
+  c2_y = c2_d0;
   sf_mex_destroy(&c2_u);
   return c2_y;
 }
@@ -699,10 +816,10 @@ static int32_T c2_e_emlrt_marshallIn
    mxArray *c2_u, const emlrtMsgIdentifier *c2_parentId)
 {
   int32_T c2_y;
-  int32_T c2_i4;
+  int32_T c2_i6;
   (void)chartInstance;
-  sf_mex_import(c2_parentId, sf_mex_dup(c2_u), &c2_i4, 1, 6, 0U, 0, 0U, 0);
-  c2_y = c2_i4;
+  sf_mex_import(c2_parentId, sf_mex_dup(c2_u), &c2_i6, 1, 6, 0U, 0, 0U, 0);
+  c2_y = c2_i6;
   sf_mex_destroy(&c2_u);
   return c2_y;
 }
@@ -756,10 +873,54 @@ static uint8_T c2_g_emlrt_marshallIn
   return c2_y;
 }
 
+static real_T c2_get_old_TimeStamp
+  (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance,
+   uint32_T c2_b)
+{
+  ssReadFromDataStoreElement(chartInstance->S, 0, NULL, c2_b);
+  if (chartInstance->c2_old_TimeStamp_address == 0) {
+    sf_mex_error_message("Invalid access to Data Store Memory data \'old_TimeStamp\' (#39) in the initialization routine of the chart.\n");
+  }
+
+  return *chartInstance->c2_old_TimeStamp_address;
+}
+
+static void c2_set_old_TimeStamp
+  (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance,
+   uint32_T c2_b, real_T c2_c)
+{
+  ssWriteToDataStoreElement(chartInstance->S, 0, NULL, c2_b);
+  if (chartInstance->c2_old_TimeStamp_address == 0) {
+    sf_mex_error_message("Invalid access to Data Store Memory data \'old_TimeStamp\' (#39) in the initialization routine of the chart.\n");
+  }
+
+  *chartInstance->c2_old_TimeStamp_address = c2_c;
+}
+
+static real_T *c2_access_old_TimeStamp
+  (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance,
+   uint32_T c2_b)
+{
+  real_T *c2_c;
+  ssReadFromDataStore(chartInstance->S, 0, NULL);
+  if (chartInstance->c2_old_TimeStamp_address == 0) {
+    sf_mex_error_message("Invalid access to Data Store Memory data \'old_TimeStamp\' (#39) in the initialization routine of the chart.\n");
+  }
+
+  c2_c = chartInstance->c2_old_TimeStamp_address;
+  if (c2_b == 0) {
+    ssWriteToDataStore(chartInstance->S, 0, NULL);
+  }
+
+  return c2_c;
+}
+
 static void init_dsm_address_info
   (SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct *chartInstance)
 {
-  (void)chartInstance;
+  ssGetSFcnDataStoreNameAddrIdx(chartInstance->S, "old_TimeStamp", (void **)
+    &chartInstance->c2_old_TimeStamp_address,
+    &chartInstance->c2_old_TimeStamp_index);
 }
 
 /* SFunction Glue Code */
@@ -785,10 +946,10 @@ extern void utFree(void*);
 
 void sf_c2_Optitrack_Simulink_TrackableLocation_get_check_sum(mxArray *plhs[])
 {
-  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(2654572526U);
-  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2884250382U);
-  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(1583114662U);
-  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(2060804656U);
+  ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3013464511U);
+  ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(2271892163U);
+  ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(573560044U);
+  ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(2614298040U);
 }
 
 mxArray *sf_c2_Optitrack_Simulink_TrackableLocation_get_autoinheritance_info
@@ -801,7 +962,7 @@ mxArray *sf_c2_Optitrack_Simulink_TrackableLocation_get_autoinheritance_info
     autoinheritanceFields);
 
   {
-    mxArray *mxChecksum = mxCreateString("b3ob6jDK3vYky6pnXW2GIG");
+    mxArray *mxChecksum = mxCreateString("IZ45u0HmjbJIGOhx2G0BrG");
     mxSetField(mxAutoinheritanceInfo,0,"checksum",mxChecksum);
   }
 
@@ -839,7 +1000,7 @@ mxArray *sf_c2_Optitrack_Simulink_TrackableLocation_get_autoinheritance_info
   {
     const char *dataFields[] = { "size", "type", "complexity" };
 
-    mxArray *mxData = mxCreateStructMatrix(1,6,3,dataFields);
+    mxArray *mxData = mxCreateStructMatrix(1,8,3,dataFields);
 
     {
       mxArray *mxSize = mxCreateDoubleMatrix(1,2,mxREAL);
@@ -954,6 +1115,44 @@ mxArray *sf_c2_Optitrack_Simulink_TrackableLocation_get_autoinheritance_info
     }
 
     mxSetField(mxData,5,"complexity",mxCreateDoubleScalar(0));
+
+    {
+      mxArray *mxSize = mxCreateDoubleMatrix(1,2,mxREAL);
+      double *pr = mxGetPr(mxSize);
+      pr[0] = (double)(1);
+      pr[1] = (double)(1);
+      mxSetField(mxData,6,"size",mxSize);
+    }
+
+    {
+      const char *typeFields[] = { "base", "fixpt" };
+
+      mxArray *mxType = mxCreateStructMatrix(1,1,2,typeFields);
+      mxSetField(mxType,0,"base",mxCreateDoubleScalar(10));
+      mxSetField(mxType,0,"fixpt",mxCreateDoubleMatrix(0,0,mxREAL));
+      mxSetField(mxData,6,"type",mxType);
+    }
+
+    mxSetField(mxData,6,"complexity",mxCreateDoubleScalar(0));
+
+    {
+      mxArray *mxSize = mxCreateDoubleMatrix(1,2,mxREAL);
+      double *pr = mxGetPr(mxSize);
+      pr[0] = (double)(1);
+      pr[1] = (double)(1);
+      mxSetField(mxData,7,"size",mxSize);
+    }
+
+    {
+      const char *typeFields[] = { "base", "fixpt" };
+
+      mxArray *mxType = mxCreateStructMatrix(1,1,2,typeFields);
+      mxSetField(mxType,0,"base",mxCreateDoubleScalar(10));
+      mxSetField(mxType,0,"fixpt",mxCreateDoubleMatrix(0,0,mxREAL));
+      mxSetField(mxData,7,"type",mxType);
+    }
+
+    mxSetField(mxData,7,"complexity",mxCreateDoubleScalar(0));
     mxSetField(mxAutoinheritanceInfo,0,"outputs",mxData);
   }
 
@@ -984,10 +1183,10 @@ static const mxArray
 
   mxArray *mxInfo = mxCreateStructMatrix(1, 1, 2, infoFields);
   const char *infoEncStr[] = {
-    "100 S1x7'type','srcId','name','auxInfo'{{M[1],M[9],T\"pitch1\",},{M[1],M[10],T\"roll1\",},{M[1],M[5],T\"x\",},{M[1],M[6],T\"y\",},{M[1],M[8],T\"yaw1\",},{M[1],M[7],T\"z\",},{M[8],M[0],T\"is_active_c2_Optitrack_Simulink_TrackableLocation\",}}"
+    "100 S1x9'type','srcId','name','auxInfo'{{M[1],M[13],T\"DeltaTime\",},{M[1],M[11],T\"TimeStamp\",},{M[1],M[9],T\"pitch1\",},{M[1],M[10],T\"roll1\",},{M[1],M[5],T\"x\",},{M[1],M[6],T\"y\",},{M[1],M[8],T\"yaw1\",},{M[1],M[7],T\"z\",},{M[8],M[0],T\"is_active_c2_Optitrack_Simulink_TrackableLocation\",}}"
   };
 
-  mxArray *mxVarInfo = sf_mex_decode_encoded_mx_struct_array(infoEncStr, 7, 10);
+  mxArray *mxVarInfo = sf_mex_decode_encoded_mx_struct_array(infoEncStr, 9, 10);
   mxArray *mxChecksum = mxCreateDoubleMatrix(1, 4, mxREAL);
   sf_c2_Optitrack_Simulink_TrackableLocation_get_check_sum(&mxChecksum);
   mxSetField(mxInfo, 0, infoFields[0], mxChecksum);
@@ -1015,7 +1214,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
            1,
            1,
            0,
-           7,
+           10,
            0,
            0,
            0,
@@ -1048,6 +1247,9 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
           _SFD_SET_DATA_PROPS(4,2,0,1,"yaw1");
           _SFD_SET_DATA_PROPS(5,2,0,1,"pitch1");
           _SFD_SET_DATA_PROPS(6,2,0,1,"roll1");
+          _SFD_SET_DATA_PROPS(7,2,0,1,"TimeStamp");
+          _SFD_SET_DATA_PROPS(8,2,0,1,"DeltaTime");
+          _SFD_SET_DATA_PROPS(9,11,0,0,"old_TimeStamp");
           _SFD_STATE_INFO(0,0,2);
           _SFD_CH_SUBSTATE_COUNT(0);
           _SFD_CH_SUBSTATE_DECOMP(0);
@@ -1063,7 +1265,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
         /* Initialization of MATLAB Function Model Coverage */
         _SFD_CV_INIT_EML(0,1,1,0,0,0,0,0,0,0,0);
-        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,856);
+        _SFD_CV_INIT_EML_FCN(0,0,"eML_blk_kernel",0,-1,1110);
         _SFD_SET_DATA_COMPILED_PROPS(0,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
           (MexFcnForType)c2_sf_marshallOut,(MexInFcnForType)NULL);
         _SFD_SET_DATA_COMPILED_PROPS(1,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
@@ -1078,6 +1280,12 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
           (MexFcnForType)c2_sf_marshallOut,(MexInFcnForType)c2_sf_marshallIn);
         _SFD_SET_DATA_COMPILED_PROPS(6,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
           (MexFcnForType)c2_sf_marshallOut,(MexInFcnForType)c2_sf_marshallIn);
+        _SFD_SET_DATA_COMPILED_PROPS(7,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
+          (MexFcnForType)c2_sf_marshallOut,(MexInFcnForType)c2_sf_marshallIn);
+        _SFD_SET_DATA_COMPILED_PROPS(8,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
+          (MexFcnForType)c2_sf_marshallOut,(MexInFcnForType)c2_sf_marshallIn);
+        _SFD_SET_DATA_COMPILED_PROPS(9,SF_DOUBLE,0,NULL,0,0,0,0.0,1.0,0,0,
+          (MexFcnForType)c2_sf_marshallOut,(MexInFcnForType)c2_sf_marshallIn);
 
         {
           real_T *c2_Trackable_index;
@@ -1087,6 +1295,10 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
           real_T *c2_yaw1;
           real_T *c2_pitch1;
           real_T *c2_roll1;
+          real_T *c2_TimeStamp;
+          real_T *c2_DeltaTime;
+          c2_DeltaTime = (real_T *)ssGetOutputPortSignal(chartInstance->S, 8);
+          c2_TimeStamp = (real_T *)ssGetOutputPortSignal(chartInstance->S, 7);
           c2_roll1 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 6);
           c2_pitch1 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 5);
           c2_yaw1 = (real_T *)ssGetOutputPortSignal(chartInstance->S, 4);
@@ -1102,6 +1314,9 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
           _SFD_SET_DATA_VALUE_PTR(4U, c2_yaw1);
           _SFD_SET_DATA_VALUE_PTR(5U, c2_pitch1);
           _SFD_SET_DATA_VALUE_PTR(6U, c2_roll1);
+          _SFD_SET_DATA_VALUE_PTR(7U, c2_TimeStamp);
+          _SFD_SET_DATA_VALUE_PTR(8U, c2_DeltaTime);
+          _SFD_SET_DATA_VALUE_PTR(9U, chartInstance->c2_old_TimeStamp_address);
         }
       }
     } else {
@@ -1114,7 +1329,7 @@ static void chart_debug_initialization(SimStruct *S, unsigned int
 
 static const char* sf_get_instance_specialization(void)
 {
-  return "Ce9TncYoO98SGkECtxwPwH";
+  return "XkE8tzkHIRLQv1Rqag1TaG";
 }
 
 static void sf_opaque_initialize_c2_Optitrack_Simulink_TrackableLocation(void
@@ -1289,12 +1504,12 @@ static void mdlSetWorkWidths_c2_Optitrack_Simulink_TrackableLocation(SimStruct
       sf_mark_chart_expressionable_inputs(S,sf_get_instance_specialization(),
         infoStruct,2,1);
       sf_mark_chart_reusable_outputs(S,sf_get_instance_specialization(),
-        infoStruct,2,6);
+        infoStruct,2,8);
     }
 
     {
       unsigned int outPortIdx;
-      for (outPortIdx=1; outPortIdx<=6; ++outPortIdx) {
+      for (outPortIdx=1; outPortIdx<=8; ++outPortIdx) {
         ssSetOutputPortOptimizeInIR(S, outPortIdx, 1U);
       }
     }
@@ -1312,13 +1527,13 @@ static void mdlSetWorkWidths_c2_Optitrack_Simulink_TrackableLocation(SimStruct
   }
 
   ssSetOptions(S,ssGetOptions(S)|SS_OPTION_WORKS_WITH_CODE_REUSE);
-  ssSetChecksum0(S,(510223525U));
-  ssSetChecksum1(S,(3308776818U));
-  ssSetChecksum2(S,(2086997498U));
-  ssSetChecksum3(S,(835183818U));
+  ssSetChecksum0(S,(4071483844U));
+  ssSetChecksum1(S,(2896496511U));
+  ssSetChecksum2(S,(3515733478U));
+  ssSetChecksum3(S,(2915397822U));
   ssSetmdlDerivatives(S, NULL);
   ssSetExplicitFCSSCtrl(S,1);
-  ssSupportsMultipleExecInstances(S,1);
+  ssSupportsMultipleExecInstances(S,0);
 }
 
 static void mdlRTW_c2_Optitrack_Simulink_TrackableLocation(SimStruct *S)

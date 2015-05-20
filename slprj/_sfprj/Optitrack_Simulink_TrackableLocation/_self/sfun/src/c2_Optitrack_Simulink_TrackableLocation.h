@@ -20,6 +20,8 @@ typedef struct {
   boolean_T c2_isStable;
   boolean_T c2_doneDoubleBufferReInit;
   uint8_T c2_is_active_c2_Optitrack_Simulink_TrackableLocation;
+  real_T *c2_old_TimeStamp_address;
+  int32_T c2_old_TimeStamp_index;
 } SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct;
 
 #endif                                 /*typedef_SFc2_Optitrack_Simulink_TrackableLocationInstanceStruct*/

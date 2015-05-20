@@ -20,12 +20,12 @@
 
 clc; clear all; close all; %clear all
 
-project_file = 'D:\or hirshfeld\onedrive\work control lab aero summer 2014 technion\MOTIVE_api\motive.ttp'; % change if necessary
+project_file = 'D:\or hirshfeld\onedrive\work control lab aero summer 2014 technion\MOTIVE_api\motive15.ttp'; % change if necessary
 %addpath('C:\Users\sorhirsh\OneDrive\work control lab aero summer 2014 technion\'); % path where you can find reltime block for simulink
 
 % load the NPTrackingTools library if it is not already loaded
-if ~libisloaded('NPTrackingToolsx64')
-
+if ~libisloaded('NPTrackingTools')
+    
     addpath('C:\Program Files\OptiTrack\Motive\lib'); % change if necessary
     addpath('C:\Program Files\OptiTrack\Motive\inc'); % change if necessary
 
@@ -58,7 +58,7 @@ T = calllib('NPTrackingTools', 'TT_FrameTimeStamp')
 sim('car_model.slx'); % call simulink model
 
 %% shutdown
-calllib('NPTrackingTools', 'TT_FinalCleanup')
+%calllib('NPTrackingTools', 'TT_FinalCleanup')
 calllib('NPTrackingTools', 'TT_Shutdown') % exit tracking tools
 unloadlibrary NPTrackingTools
 

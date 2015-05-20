@@ -138,10 +138,10 @@ unsigned int sf_Optitrack_Simulink_TrackableLocation_process_check_sum_call( int
       return 0;
     }
   } else {
-    ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(739111526U);
-    ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(4105470331U);
-    ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(303816743U);
-    ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(3725665262U);
+    ((real_T *)mxGetPr((plhs[0])))[0] = (real_T)(3452883948U);
+    ((real_T *)mxGetPr((plhs[0])))[1] = (real_T)(3384391402U);
+    ((real_T *)mxGetPr((plhs[0])))[2] = (real_T)(1895103608U);
+    ((real_T *)mxGetPr((plhs[0])))[3] = (real_T)(322560919U);
   }
 
   return 1;
@@ -179,7 +179,7 @@ unsigned int sf_Optitrack_Simulink_TrackableLocation_autoinheritance_info( int
     switch (chartFileNumber) {
      case 2:
       {
-        if (strcmp(aiChksum, "b3ob6jDK3vYky6pnXW2GIG") == 0) {
+        if (strcmp(aiChksum, "IZ45u0HmjbJIGOhx2G0BrG") == 0) {
           extern mxArray
             *sf_c2_Optitrack_Simulink_TrackableLocation_get_autoinheritance_info
             (void);
@@ -278,7 +278,7 @@ unsigned int sf_Optitrack_Simulink_TrackableLocation_third_party_uses_info( int
     switch (chartFileNumber) {
      case 2:
       {
-        if (strcmp(tpChksum, "Ce9TncYoO98SGkECtxwPwH") == 0) {
+        if (strcmp(tpChksum, "XkE8tzkHIRLQv1Rqag1TaG") == 0) {
           extern mxArray
             *sf_c2_Optitrack_Simulink_TrackableLocation_third_party_uses_info
             (void);
@@ -318,7 +318,7 @@ unsigned int sf_Optitrack_Simulink_TrackableLocation_updateBuildInfo_args_info
     switch (chartFileNumber) {
      case 2:
       {
-        if (strcmp(tpChksum, "Ce9TncYoO98SGkECtxwPwH") == 0) {
+        if (strcmp(tpChksum, "XkE8tzkHIRLQv1Rqag1TaG") == 0) {
           extern mxArray
             *sf_c2_Optitrack_Simulink_TrackableLocation_updateBuildInfo_args_info
             (void);
